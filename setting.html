@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="node_modules/popper.js/dist/umd/popper.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./styles.css">
+    <script defer src="./setting.js"></script>
+    <title>Setting</title>
+  </head>
+  <body>
+  <div id="setting-alert" class="alert alert-success" role="alert">
+    Saved
+  </div>
+  <form class="save-form">
+    <span>Your instagram/site account</span>
+    <div class="setting-input">
+      <input id="username" class="form-control" type="text" placeholder="Username or email" aria-label="default input example">
+    </div>
+    <div class="setting-input">
+      <input id="password" class="form-control" type="password" placeholder="Password" aria-label="default input example">
+    </div>
+
+    <div class="img-path">
+      <span class="title">Image path</span>
+      <div class="row">
+        <div class="setting-input col-9">
+          <input id="path" class="form-control" type="text" readonly disabled>
+        </div>
+        <div class="col-3">
+          <button id="sel-dir" class="btn btn-primary mb-3 shadow-none">Choose</button>
+        </div>
+      </div>
+
+
+      <!--      <div class="setting-input">-->
+<!--        <button id="sel-dir" class="btn btn-primary mb-3 shadow-none">Choose</button>-->
+<!--      </div>-->
+    </div>
+
+    <div class="save-btn-wrapper">
+      <button type="submit" class="btn btn-primary shadow-none" id="saveBtn">
+        Save
+      </button>
+
+    </div>
+  </form>
+    <!-- You can also require other files to run in this process -->
+
+  </body>
+</html>
+

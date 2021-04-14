@@ -1,0 +1,69 @@
+{
+  "name": "instagram-crawler",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "phtrungit",
+  "license": "1.0",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "electron": "^12.0.2"
+  },
+  "dependencies": {
+    "bootstrap": "^5.0.0-beta3",
+    "crawler": "^1.3.0",
+    "date-fns": "^2.20.3",
+    "electron-squirrel-startup": "^1.0.0",
+    "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
+    "node-fetch": "^2.6.1",
+    "playwright": "^1.10.0",
+    "popover": "^2.4.1",
+    "popper.js": "^1.16.1",
+    "remote": "^0.2.6"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "electron_quick_start"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  }
+}

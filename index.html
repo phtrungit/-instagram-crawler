@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="node_modules/popper.js/dist/umd/popper.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./styles.css">
+    <script defer src="./renderer.js"></script>
+    <script src="./autocomplete.js"></script>
+    <title>Instagram image crawler</title>
+  </head>
+  <body>
+  <form class="row address-form">
+    <div class="col-9">
+      <div class="input-group mb-3">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Instagram</button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Instagram</a></li>
+          <li><a class="dropdown-item" href="#">Site</a></li>
+        </ul>
+        <input id="inLink" class="form-control" type="text" placeholder="Instagram ID" aria-label="default input example">
+      </div>
+    </div>
+    <div class="col-3">
+      <button type="submit" class="btn btn-primary mb-3 shadow-none" id="fetchBtn">
+        Crawl
+      </button>
+
+    </div>
+    <div class="form-check col-6">
+      <input class="form-check-input shadow-none" type="checkbox" id="highResChecked">
+      <label class="form-check-label" for="highResChecked">
+        High resolution image
+      </label>
+    </div>
+    <div class="col-3" id="limit-block">
+        <label for="limitImage">Limit</label>
+        <input type="number" value="0" id="limitImage">
+    </div>
+    <div class="form-check col-6">
+      <input class="form-check-input shadow-none" type="checkbox" id="vzChecked">
+      <label class="form-check-label" for="vzChecked">
+        Visualization
+      </label>
+    </div>
+  </form>
+
+  <div class="progress">
+    <div id="progress-bar" class="progress-bar bg-success progress-bar-striped progress-bar-animate" role="progressbar" ></div>
+<!--    <div id="progress-bar" class="progress-bar bg-success progress-bar-striped progress-bar-animate" role="progressbar" >Loading...</div>-->
+  </div>
+  <span class="error" id="error-msg"></span>
+
+    <!-- You can also require other files to run in this process -->
+
+  </body>
+</html>
+
