@@ -1,10 +1,11 @@
 const electron = require('electron');
 const fs = require('fs')
-require('./autocomplete')
+require('../scripts/autocomplete')
 const {ipcRenderer} = electron;
 
-const historyData = (fs.existsSync('./history') && fs.readFileSync('./history'))
-let history = JSON.parse(historyData)
+const historyData = (fs.existsSync('./configs/history') && fs.readFileSync('./configs/history'))
+console.log((historyData.toString() || '').split(','))
+let history = (historyData.toString() || '').split(',')
 history && history.length && (history = history.map(hs => {
   return {
     label: hs,
@@ -12,6 +13,17 @@ history && history.length && (history = history.map(hs => {
   }
 }))
 
+const siteNames = []
+const settingData = (fs.existsSync('./configs/setting.json') && fs.readFileSync('./configs/setting.json')) + ''
+console.log(settingData)
+let setting = (settingData && JSON.parse(settingData))
+let siteList = document.querySelector('.dropdown-menu').innerHTML
+setting && Object.keys(setting).forEach(site => {
+  siteNames.push(site)
+  siteList += `<li><a class="dropdown-item" href="#">${site}</a></li>`
+})
+document.querySelector('.dropdown-menu').innerHTML = siteList
+siteNames[0] && (document.querySelector('.dropdown-toggle').innerText = siteNames[0])
 document.querySelector('.address-form').addEventListener('submit', submitForm);
 document.querySelector('.dropdown-menu').addEventListener(
   'click', function (e) {
@@ -30,19 +42,24 @@ const ac = new Autocomplete(field, {
     console.log("user selected:", label, value);
   }
 });
+console.log('hs ', history)
 ac.setData(history)
 
 document.querySelector('#inLink').addEventListener(
   'focusout', function (e) {
     document.getElementsByClassName('autocomplete-wrapper')[0].children.length &&
-    (document.getElementsByClassName('autocomplete-wrapper')[0].style.display = 'none')
+      setTimeout(() => {
+        (document.getElementsByClassName('autocomplete-wrapper')[0].style.display = 'none')
+      }, 200)
   }
 )
 
 document.querySelector('#inLink').addEventListener(
   'focusin', function (e) {
     document.getElementsByClassName('autocomplete-wrapper')[0].children.length &&
-    (document.getElementsByClassName('autocomplete-wrapper')[0].style.display = 'inline-block')
+    setTimeout(() => {
+      (document.getElementsByClassName('autocomplete-wrapper')[0].style.display = 'inline-block')
+    }, 200)
   }
 )
 
@@ -59,7 +76,9 @@ function submitForm(e){
     highRes: document.getElementById('highResChecked').checked,
     limit: +document.getElementById('limitImage').value,
     viz: document.getElementById('vzChecked').checked,
-    isInstagram: document.querySelector('.dropdown-toggle').innerText === 'Instagram'
+    isInstagram: document.querySelector('.dropdown-toggle').innerText === 'Instagram',
+    name: document.querySelector('.dropdown-toggle').innerText,
+    pageNumber: +document.getElementById('pageNumber').value || 1
   }
   document.getElementById("progress-bar").style.width = "0"
   document.getElementById("fetchBtn").disabled = true;

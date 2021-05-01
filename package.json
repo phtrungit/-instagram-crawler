@@ -2,7 +2,7 @@
   "name": "instagram-crawler",
   "version": "1.0.0",
   "description": "A minimal Electron application",
-  "main": "main.js",
+  "main": "scripts/main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",

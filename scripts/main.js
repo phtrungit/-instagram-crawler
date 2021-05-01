@@ -36,7 +36,7 @@ function createWindow () {
   // Menu.setApplicationMenu(mainMenu);
   mainWindow.setMenu(mainMenu)
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('./public/index.html')
   mainWindow.on('ready-to-show', function () {
     mainWindow.webContents.send('data:history', [{label: 'phtrungtest', value: 'phtrung'}])
   })
@@ -80,9 +80,12 @@ function createSettingWindow(){
       contextIsolation: false,
     }
   });
-  settingWindow.setMenu(Menu.buildFromTemplate(app.isPackaged ? [{role: 'toggleDevTools'}] : []))
+  settingWindow.setMenu(Menu.buildFromTemplate(!app.isPackaged ? [{role: 'toggleDevTools'},
+    {
+      role: 'reload'
+    }] : []))
   settingWindow.setPosition(pos[0] + 150, pos[1] + 50)
-  settingWindow.loadFile('setting.html')
+  settingWindow.loadFile('./public/setting.html')
   settingWindow.on('ready-to-show', function () {
     settingWindow.webContents.send('data:setting', [`${app.getAppPath()}\\img`, setting])
   })
@@ -97,11 +100,14 @@ function createSettingWindow(){
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
   try{
-    setting = JSON.parse(await fs.readFileSync('./setting.json'))
+    setting = JSON.parse(await fs.readFileSync('./configs/setting.json'))
   }catch (e) {
     setting = {}
   }
-
+  if (!Object.keys(setting).length){
+    setting['Instagram'] = {"name":"Instagram","domain":"instagram.com"}
+    await fs.writeFileSync('./configs/setting.json', JSON.stringify(setting))
+  }
   createWindow()
   
   app.on('activate', function () {
@@ -124,8 +130,9 @@ ipcMain.handle('action:fetch', async (event, ...args) => {
   const insId = args[0]
   const options = args[1]
   saveHistory(insId)
-  // setting = JSON.parse(fs.readFileSync('./setting.json'))
-  craw(insId, mainWindow, setting, options).then((data) => {
+  const siteSetting = setting[options.name] || {}
+  // setting = JSON.parse(fs.readFileSync('./configs/history'))
+  craw(insId, mainWindow, siteSetting, options).then((data) => {
     mainWindow.webContents.send('data:done', [data])
     showNotification(`Total: ${data} \r\nFinished after ${dateFns.formatDistanceToNowStrict(startDate)}`)
   }).catch((e) => {
@@ -143,9 +150,10 @@ ipcMain.handle('action:selDir', function(event, ...args) {
 });
 
 ipcMain.handle('action:saveSetting', async function(event, ...args) {
-    await fs.writeFileSync('./setting.json', JSON.stringify(args[0]))
-    setting = args[0]
+  setting[args[0].name] = args[0]
+  await fs.writeFileSync('./configs/setting.json', JSON.stringify(setting))
 });
+
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
@@ -154,11 +162,12 @@ app.on('window-all-closed', function () {
 })
 
 function saveHistory(insId){
-  const oldHistory = fs.existsSync('./history') && JSON.parse(fs.readFileSync('./history'))
+  const oldHistory = fs.existsSync('./configs/history') &&
+    (fs.readFileSync('./configs/history') + '').split(',')
   const newHistory = [...new Set([insId, ...(oldHistory || [])])]
   newHistory.length > 20 && (newHistory.length = 20)
 
-  fs.writeFileSync('./history', JSON.stringify(newHistory))
+  fs.writeFileSync('./configs/history', newHistory.join(','))
 }
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

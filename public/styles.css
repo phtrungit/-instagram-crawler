@@ -1,0 +1,130 @@
+body{
+    background-color: aliceblue;
+}
+.address-form{
+    margin: 15px;
+}
+#fetchBtn{
+    background-color: darkslategray;
+    width: 100%;
+}
+.progress{
+    height: 25px;
+    margin: 10px;
+}
+#progress-bar{
+    font-size: 14px;
+    width: 0;
+    aria-valuenow:"25";
+    aria-valuemin: 0;
+    aria-valuemax:"100"
+}
+.save-form{
+    margin: 10px;
+}
+.save-form span{
+    margin-top: 10px;
+}
+.setting-input{
+    width: 75%;
+    margin-top: 10px;
+}
+.img-path{
+    margin-top: 20px;
+}
+#sel-dir{
+    background-color: green;
+    margin-top: 10px;
+}
+.save-btn-wrapper{
+    display: flex;
+    justify-content: center;
+}
+#saveBtn{
+    width: 50%;
+}
+.alert{
+    display: none;
+}
+.form-check{
+    margin-left: 10px;
+}
+#limit-block{
+    /*display: flex;*/
+}
+#page-block{
+    margin-top: 5px;
+}
+#limitImage{
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    border: 0;
+}
+#pageNumber{
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    border: 0;
+}
+.error{
+    margin-left: 20px;
+    color: red;
+}
+#inLink{
+    box-shadow: 0 0 0 0.2rem transparent;
+}
+.btn-outline-secondary.dropdown-toggle.show:focus{
+    box-shadow: 0 0 0 0.25rem transparent;
+}
+.btn-outline-secondary{
+    color: black;
+}
+.accordion-button:focus{
+    box-shadow: 0 0 0 0.25rem transparent;
+}
+.accordion-button{
+    background-color: aliceblue;
+}
+.accordion-button:not(.collapsed)::after {
+    background-image: url('./statics/icon.svg');
+    transform: rotate(
+            180deg
+    );
+}
+.accordion-button::after {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: auto;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1.25rem;
+    transition: transform .2s ease-in-out;
+    background-image: url('./statics/icon2.svg');
+}
+.site-setting-drw{
+    margin: 10px;
+}
+.site-setting-btn{
+    /*height: 30px;*/
+    min-width: 120px;
+}
+.setting-form-item{
+    margin-bottom: 10px;
+}
+.paging-format-wrapper{
+    margin-top: 10px;
+    margin-left: 0;
+    width: 150px;
+    align-items: center;
+}
+.paging-format-wrapper .col-9{
+    padding: 0!important;
+}
+.paging-format-wrapper .col-3{
+    padding: 0!important;
+}
+#paging-format{
+    /*display: inline-block;*/
+}

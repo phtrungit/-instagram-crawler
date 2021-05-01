@@ -47,18 +47,17 @@ async function hrsCrawl(page, mw, setting, options, browser){
   console.log('Downloading...')
   mw.webContents.send('data:status', ['Downloading..', '75%'])
   await Promise.all(imgUrls.map((url, index) => download({ url, name: index + '_hrs' })))
-  browser.close();
   console.log('Done')
   mw.webContents.send('data:status', ['Done', '100%'])
   isRunning = false
   return imgUrls.length
 }
-async function normalCrawl(page, mw, setting, options, browser){
+async function normalCrawl(page, mw, setting, options, browser, pageNumber){
   // You can also take screenshots of pages
   let prevHg = 0
   let imgData = []
   console.log('Fetching...')
-  mw.webContents.send('data:status', ['Fetching image...', '50%'])
+  mw.webContents.send('data:status', [`Fetching image ${pageNumber ? `- Page: ${pageNumber}` : ''}...`, '50%'])
   while (true){
     const hg = await page.evaluate('document.body.scrollHeight')
     await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
@@ -73,16 +72,16 @@ async function normalCrawl(page, mw, setting, options, browser){
       }
     }while (true)
 
-    const data = await page.evaluate(async () => {
-      const images = document.querySelectorAll('img');
+    const data = await page.evaluate(async (setting) => {
+      const images = document.querySelectorAll(`${setting.imgWrapper ? `.${setting.imgWrapper} ` : ''}img`);
       const urls = Array.from(images).map((v) => v.src);
       return urls;
-    });
+    }, setting);
     console.log(hg, prevHg)
 
     imgData.push(...data)
     imgData = [...new Set(imgData)];
-    mw.webContents.send('data:status', [`Fetching image ${options.limit ? `[${imgData.length}/${options.limit}]` : `[${imgData.length}]`}...`, '50%'])
+    mw.webContents.send('data:status', [`Fetching image ${pageNumber ? `- Page: ${pageNumber}` : ''} ${options.limit ? `[${imgData.length}/${options.limit}]` : `[${imgData.length}]`}...`, '50%'])
     try {
       if (options.limit && (imgData.length > options.limit)){
         console.log('Reach the limit')
@@ -100,20 +99,15 @@ async function normalCrawl(page, mw, setting, options, browser){
   }
 
   console.log('Downloading...')
-  mw.webContents.send('data:status', ['Downloading..', '75%'])
-  await Promise.all(imgData.map((url, index) => download({ url, name: index })))
+  mw.webContents.send('data:status', [`Downloading ${pageNumber ? `- Page: ${pageNumber}` : ''}..`, '75%'])
+  await Promise.all(imgData.map((url, index) => download({ url, name: `${pageNumber ? `page${pageNumber}_` : ''}` + index })))
   mw.webContents.send('data:status', ['Done', '100%'])
-  browser.close();
+
   console.log('Done')
   return imgData.length
 }
 
 async function craw(insId, mw, setting, options){
-  if (!setting.username || !setting.password){
-    return {
-      errorCode: 1
-    }
-  }
   insId.length > 100 && insId.slice(0, 100)
   const insName = insId.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
   storePath = path.join(setting.path, insName)
@@ -130,7 +124,7 @@ async function craw(insId, mw, setting, options){
       await loginSite(mw, page, setting, insId)
     }
   } catch (e) {
-    console.log('Login error')
+    console.log('Login error', e)
     return {
       errorCode: 1
     }
@@ -140,10 +134,23 @@ async function craw(insId, mw, setting, options){
     if (options.highRes && options.isInstagram){
       return await hrsCrawl(page, mw, setting, options, browser)
     }else {
-      return await normalCrawl(page, mw, setting, options, browser)
+      if (setting.pageFormat){
+        let nImg = 0
+        for (let i = 1; i <= options.pageNumber; i++) {
+          const url = !insId.includes(setting.pageFormat) ? (insId + setting.pageFormat + i) : insId
+          await page.goto(url)
+          const cnt = await normalCrawl(page, mw, setting, options, browser, i)
+          nImg += cnt
+        }
+        return nImg
+      }else{
+        return await normalCrawl(page, mw, setting, options, browser)
+      }
     }
   }catch (e) {
     console.log(e)
+  }finally {
+    browser.close();
   }
 
 }
@@ -163,7 +170,9 @@ async function loginSite(mw, page, setting, insId) {
   if (!isNeedLogin){
     return
   }
-
+  if (!setting.username || !setting.password){
+    throw new Error('login info is empty.')
+  }
   const loginData = await page.evaluate(() => {
     const input = document.querySelectorAll('input')
     if (!input.length){
@@ -192,6 +201,9 @@ async function loginSite(mw, page, setting, insId) {
 }
 
 async function loginInstagram(mw, page, setting, insId){
+  if (!setting.username || !setting.password){
+    throw new Error('login info is empty.')
+  }
   await page.goto('https://www.instagram.com/');
   await page.waitForSelector('[name=username]', {
     state: 'visible'

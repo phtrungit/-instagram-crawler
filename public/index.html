@@ -5,22 +5,22 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <script src="node_modules/popper.js/dist/umd/popper.js"></script>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="../node_modules/popper.js/dist/umd/popper.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="./styles.css">
-    <script defer src="./renderer.js"></script>
-    <script src="./autocomplete.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="../scripts/renderer.js"></script>
+    <script src="../scripts/autocomplete.js"></script>
     <title>Instagram image crawler</title>
   </head>
   <body>
   <form class="row address-form">
     <div class="col-9">
       <div class="input-group mb-3">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Instagram</button>
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Site</button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Instagram</a></li>
+<!--          <li><a class="dropdown-item" href="#">Instagram</a></li>-->
           <li><a class="dropdown-item" href="#">Site</a></li>
         </ul>
         <input id="inLink" class="form-control" type="text" placeholder="Instagram ID" aria-label="default input example">
@@ -48,6 +48,10 @@
         Visualization
       </label>
     </div>
+      <div class="col-3" id="page-block">
+          <label for="pageNumber">Page</label>
+          <input type="number" value="0" id="pageNumber">
+      </div>
   </form>
 
   <div class="progress">
