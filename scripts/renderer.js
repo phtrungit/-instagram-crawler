@@ -73,12 +73,11 @@ function submitForm(e){
     return
   }
   const options = {
-    highRes: document.getElementById('highResChecked').checked,
-    limit: +document.getElementById('limitImage').value,
+    grMemberMin: +document.getElementById('grMemberMin').value || 0,
+    grMemberMax: +document.getElementById('grMemberMax').value || 0,
     viz: document.getElementById('vzChecked').checked,
-    isInstagram: document.querySelector('.dropdown-toggle').innerText === 'Instagram',
+    limit: +document.getElementById('limitImage').value,
     name: document.querySelector('.dropdown-toggle').innerText,
-    pageNumber: +document.getElementById('pageNumber').value || 1
   }
   document.getElementById("progress-bar").style.width = "0"
   document.getElementById("fetchBtn").disabled = true;

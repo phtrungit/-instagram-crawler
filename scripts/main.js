@@ -20,20 +20,19 @@ function createWindow () {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-
-  if (!app.isPackaged){
-    mainMenuTemplate.push(
-      {
-        role: 'toggleDevTools'
-      },
-      {
-        role: 'reload'
-      })
-  }
+  // mainWindow.webContents.openDevTools()
+  mainMenuTemplate.push(
+    {
+      role: 'toggleDevTools'
+    },
+    {
+      role: 'reload'
+    })
 
   const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
   // Insert menu
   // Menu.setApplicationMenu(mainMenu);
+  Menu.setApplicationMenu(mainMenu)
   mainWindow.setMenu(mainMenu)
   // and load the index.html of the app.
   mainWindow.loadFile('./public/index.html')
@@ -87,7 +86,7 @@ function createSettingWindow(){
   settingWindow.setPosition(pos[0] + 150, pos[1] + 50)
   settingWindow.loadFile('./public/setting.html')
   settingWindow.on('ready-to-show', function () {
-    settingWindow.webContents.send('data:setting', [`${app.getAppPath()}\\img`, setting])
+    settingWindow.webContents.send('data:setting', [`${app.getAppPath()}/storage`, setting])
   })
   // Handle garbage collection
   settingWindow.on('close', function(){
@@ -105,11 +104,16 @@ app.whenReady().then(async () => {
     setting = {}
   }
   if (!Object.keys(setting).length){
-    setting['Instagram'] = {"name":"Instagram","domain":"instagram.com"}
+    // create folder configs
+    if (!fs.existsSync('./configs')){
+      fs.mkdirSync('./configs')
+    }
+
+    setting['Facebook'] = {"name":"Facebook","domain":"https://www.facebook.com"}
     await fs.writeFileSync('./configs/setting.json', JSON.stringify(setting))
   }
   createWindow()
-  
+
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
@@ -118,13 +122,13 @@ app.whenReady().then(async () => {
 })
 function showNotification (content) {
   const notification = {
-    title: 'Instagram crawler',
+    title: 'Marketing crawler',
     body: content
   }
   new Notification(notification).show()
 }
 ipcMain.handle('action:fetch', async (event, ...args) => {
-  console.log('Data from client')
+  console.log('Fetch data')
   const startDate = new Date()
   showNotification('Crawling...')
   const insId = args[0]
@@ -150,7 +154,17 @@ ipcMain.handle('action:selDir', function(event, ...args) {
 });
 
 ipcMain.handle('action:saveSetting', async function(event, ...args) {
-  setting[args[0].name] = args[0]
+  console.log(app.getAppPath())
+  const newSetting = args[0]
+  const oldSetting = setting[newSetting.name]
+  const sessionPath = `${app.getAppPath()}/storage/${(newSetting.name || '').toLowerCase().replaceAll(' ', '')}_session.json`
+  if (
+    (oldSetting.username !== newSetting.username || oldSetting.password !== newSetting.password) &&
+    fs.existsSync(sessionPath)
+  ){
+    fs.unlinkSync(sessionPath)
+  }
+  setting[newSetting.name] = newSetting
   await fs.writeFileSync('./configs/setting.json', JSON.stringify(setting))
 });
 

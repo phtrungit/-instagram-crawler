@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="styles.css">
     <script defer src="../scripts/renderer.js"></script>
     <script src="../scripts/autocomplete.js"></script>
-    <title>Instagram image crawler</title>
+    <title>Crawler</title>
   </head>
   <body>
   <form class="row address-form">
@@ -21,37 +21,33 @@
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Site</button>
         <ul class="dropdown-menu">
 <!--          <li><a class="dropdown-item" href="#">Instagram</a></li>-->
-          <li><a class="dropdown-item" href="#">Site</a></li>
+<!--          <li><a class="dropdown-item" href="#">Site</a></li>-->
         </ul>
-        <input id="inLink" class="form-control" type="text" placeholder="Instagram ID" aria-label="default input example">
+        <input id="inLink" class="form-control" type="text" placeholder="keyword" aria-label="default input example">
       </div>
     </div>
     <div class="col-3">
-      <button type="submit" class="btn btn-primary mb-3 shadow-none" id="fetchBtn">
+      <button type="submit" class="btn btn-primary shadow-none" id="fetchBtn">
         Crawl
       </button>
-
+        <div class="form-check col-6 mb-3">
+            <input class="form-check-input shadow-none" type="checkbox" id="vzChecked">
+            <label class="form-check-label" for="vzChecked">
+                Visualization
+            </label>
+        </div>
     </div>
-    <div class="form-check col-6">
-      <input class="form-check-input shadow-none" type="checkbox" id="highResChecked">
-      <label class="form-check-label" for="highResChecked">
-        High resolution image
-      </label>
+    <div class="col-7" style="background-color: red">
+        <div style="display: flex">
+            <label for="grMemberMin">Group member range</label>
+            <input style="max-width: 20px" type="number" value="0" id="grMemberMin">
+            <input style="width: 20px" type="number" value="0" id="grMemberMax">
+        </div>
     </div>
     <div class="col-3" id="limit-block">
         <label for="limitImage">Limit</label>
-        <input type="number" value="0" id="limitImage">
+        <input type="number" value="100" id="limitImage">
     </div>
-    <div class="form-check col-6">
-      <input class="form-check-input shadow-none" type="checkbox" id="vzChecked">
-      <label class="form-check-label" for="vzChecked">
-        Visualization
-      </label>
-    </div>
-      <div class="col-3" id="page-block">
-          <label for="pageNumber">Page</label>
-          <input type="number" value="0" id="pageNumber">
-      </div>
   </form>
 
   <div class="progress">

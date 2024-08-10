@@ -46,13 +46,20 @@ function selectDataPath(e) {
 
 ipcRenderer.on('data:setting', function(e, args){
   let siteList = document.querySelector('.dropdown-menu').innerHTML
+  let firstSite = ''
   args[1] && Object.keys(args[1]).forEach(site => {
+    firstSite = firstSite || site
     siteList += `<li><a class="dropdown-item" href="#">${site}</a></li>`
   })
+  siteList += `<li><a class="dropdown-item" href="#">---- New ----</a></li>`
   document.querySelector('.dropdown-menu').innerHTML = siteList
   args[1] && (setting = args[1])
   const siteName = (document.querySelector('.dropdown-toggle').innerText || '').toLowerCase()
-  const siteSetting = args[1] && args[1][siteName]
+  const siteSetting = firstSite && args[1] && args[1][firstSite]
+  if (firstSite){
+    document.getElementById('site-setting-btn').innerText = firstSite
+  }
+  console.log('siteName', siteName)
   document.getElementById('path').value = siteSetting ? (siteSetting.path || args[0]) : args[0]
   document.getElementById('username').value = (siteSetting && siteSetting.username) || document.getElementById('username').value
   document.getElementById('password').value = (siteSetting && siteSetting.password) || document.getElementById('password').value

@@ -67,6 +67,18 @@ body{
     text-align: center;
     border: 0;
 }
+#grMemberMin{
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    border: 0;
+}
+#grMemberMax{
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    border: 0;
+}
 .error{
     margin-left: 20px;
     color: red;
