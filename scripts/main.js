@@ -72,8 +72,8 @@ function createSettingWindow(){
   const pos = mainWindow.getPosition()
   settingWindow = new BrowserWindow({
     width: 800,
-    height: 400,
-    title:'Add Shopping List Item',
+    height: 500,
+    title:'Setting',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -166,6 +166,7 @@ ipcMain.handle('action:saveSetting', async function(event, ...args) {
   }
   setting[newSetting.name] = newSetting
   await fs.writeFileSync('./configs/setting.json', JSON.stringify(setting))
+  showNotification('Saved the settings')
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

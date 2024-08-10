@@ -13,8 +13,6 @@ document.querySelector('.dropdown-menu').addEventListener(
     document.getElementById('password').value = (siteSetting && siteSetting.password) || ''
     document.getElementById('name').value = (siteSetting && siteSetting.name) || ''
     document.getElementById('domain').value = (siteSetting && siteSetting.domain) || ''
-    document.getElementById('paging-format').value = (siteSetting && siteSetting.pageFormat) || document.getElementById('paging-format').value
-    document.getElementById('imgWrapper').value = (siteSetting && siteSetting.imgWrapper) || document.getElementById('imgWrapper').value
 
   }
 )
@@ -27,8 +25,6 @@ function saveSetting(e) {
     username: document.getElementById('username').value,
     password: document.getElementById('password').value,
     path: document.getElementById('path').value,
-    pageFormat: document.getElementById('paging-format').value,
-    imgWrapper: document.getElementById('imgWrapper').value,
   }
 
   ipcRenderer.invoke('action:saveSetting', data).then(() => {
@@ -65,6 +61,4 @@ ipcRenderer.on('data:setting', function(e, args){
   document.getElementById('password').value = (siteSetting && siteSetting.password) || document.getElementById('password').value
   document.getElementById('name').value = (siteSetting && siteSetting.name) || document.getElementById('name').value
   document.getElementById('domain').value = (siteSetting && siteSetting.domain) || document.getElementById('domain').value
-  document.getElementById('imgWrapper').value = (siteSetting && siteSetting.imgWrapper) || document.getElementById('imgWrapper').value
-  document.getElementById('paging-format').value = (siteSetting && siteSetting.pageFormat) || document.getElementById('paging-format').value
 });
