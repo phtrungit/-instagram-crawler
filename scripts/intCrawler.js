@@ -138,7 +138,7 @@ async function craw(insId, mw, setting, options){
   storePath = path.join(setting.path, insName)
   !fs.existsSync(storePath) && fs.mkdirSync(storePath, {recursive: true})
 
-  const browser = options.viz ? await playwright['firefox'].launch({ headless: false, slowMo: 100 }) : await playwright['firefox'].launch();
+  const browser = options.viz ? await playwright['chromium'].launch({ headless: false, slowMo: 100 }) : await playwright['chromium'].launch();
   const context = await browser.newContext();
   const page = await context.newPage();
 
