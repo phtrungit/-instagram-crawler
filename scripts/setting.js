@@ -47,7 +47,7 @@ ipcRenderer.on('data:setting', function(e, args){
     firstSite = firstSite || site
     siteList += `<li><a class="dropdown-item" href="#">${site}</a></li>`
   })
-  siteList += `<li><a class="dropdown-item" href="#">---- New ----</a></li>`
+  //siteList += `<li><a class="dropdown-item" href="#">---- New ----</a></li>`
   document.querySelector('.dropdown-menu').innerHTML = siteList
   args[1] && (setting = args[1])
   const siteName = (document.querySelector('.dropdown-toggle').innerText || '').toLowerCase()

@@ -140,3 +140,8 @@ body{
 #paging-format{
     /*display: inline-block;*/
 }
+.message-text {
+    margin-left: 20px;
+    text-align: center;
+    width: 100%;
+}

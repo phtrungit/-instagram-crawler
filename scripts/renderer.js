@@ -64,7 +64,6 @@ document.querySelector('#inLink').addEventListener(
 )
 
 
-
 function submitForm(e){
   e.preventDefault()
   document.querySelector('.error').innerText = ''
@@ -99,7 +98,7 @@ ipcRenderer.on('data:done', function(e, args){
   if (args[0].errorCode){
     switch (args[0].errorCode) {
       case 1: {
-        document.querySelector('.error').innerText = 'Error: Please check your instagram account in File -> Setting'
+        document.querySelector('.error').innerText = 'Error: Login failed. Please check your account in File -> Setting'
         break
       }
     }
@@ -107,9 +106,9 @@ ipcRenderer.on('data:done', function(e, args){
   if (!args[0]){
     document.querySelector('.error').innerText = 'Error: Unknown error'
   }
-  console.log('Total img: ', args[0])
 });
 ipcRenderer.on('data:status', function(e, args){
-  document.querySelector('#progress-bar').innerText = args[0]
+  document.querySelector('#progress-bar').innerText = args[1]
   document.getElementById("progress-bar").style.width = args[1]
+  document.getElementById("message-text").innerText = args[0]
 });

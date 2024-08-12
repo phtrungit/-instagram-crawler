@@ -6,6 +6,10 @@ const { exec } = require('child_process');
 let storePath
 const {app} = require('electron')
 
+const logoutSelector = {
+  'Facebook': 'div[aria-label="Your profile"]',
+}
+
 async function facebookGroupCrawl(keyword, page, mw, setting, options, browser, maxPages) {
   console.log('Fetching...');
   const { limit = 100, grMemberMin = 0, grMemberMax = 0 } = options;
@@ -20,6 +24,8 @@ async function facebookGroupCrawl(keyword, page, mw, setting, options, browser, 
     try {
       newGroups = await page.evaluate(() => {
         window.scrollTo(0, document.body.scrollHeight);
+        // Wait for 2 seconds to load new data
+
         const feed = document.querySelectorAll('[role="feed"]');
         const groupElements = Array.from(feed[0].querySelectorAll('[role="article"]'));
         const groupData = [];
@@ -133,8 +139,7 @@ function generateHtml(groups, keyword) {
 
 async function craw(insId, mw, setting, options){
   insId.length > 100 && insId.slice(0, 100)
-  const insName = insId.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
-  storePath = path.join(setting.path, insName)
+  storePath = path.join(setting.path)
   !fs.existsSync(storePath) && fs.mkdirSync(storePath, {recursive: true})
 
   const browser = options.viz ? await playwright['firefox'].launch({ headless: false, slowMo: 100 }) : await playwright['firefox'].launch();
@@ -160,7 +165,7 @@ async function craw(insId, mw, setting, options){
 
 }
 
-async function loginSite(mw, page, setting, insId) {
+async function loginSite(mw, page, setting) {
   const sessionFileName = `${(setting.name || '').toLowerCase().replaceAll(' ', '')}_session.json`
   const SESSION_FILE = path.join(app.getAppPath(), 'storage', sessionFileName);
 
@@ -180,12 +185,14 @@ async function loginSite(mw, page, setting, insId) {
   ]);
 
   if (!isNeedLogin) {
+    mw.webContents.send('data:status', [`Already logged in`, '10%']);
     return;
   }
 
   if (!setting.username || !setting.password) {
     throw new Error('login info is empty.');
   }
+
 
   mw.webContents.send('data:status', [`Login with ${setting.username}...`, '15%']);
   const loginData = await page.evaluate(() => {
@@ -205,21 +212,26 @@ async function loginSite(mw, page, setting, insId) {
   });
 
   const { userNameType, formClassName } = loginData;
-  try {
+
     await page.type(`[name=${userNameType}]`, setting.username);
     await page.type('[type="password"]', setting.password);
     await page.click(`form.${formClassName} button`);
     await page.waitForSelector('body');
-    mw.webContents.send('data:status', [`Login success`, '20%']);
+
+    try {
+      console.log(logoutSelector[setting.name])
+      logoutSelector[setting.name] && await page.waitForSelector(`${logoutSelector[setting.name]}`, { timeout: 10000 });
+      mw.webContents.send('data:status', [`Login success`, '20%']);
+    } catch (error) {
+      console.error('Login failed', error);
+      throw new Error('Login failed');
+    }
 
     // Save session state after successful login
     const cookies = await page.context().cookies();
     const storageState = await page.context().storageState();
     fs.writeFileSync(SESSION_FILE, JSON.stringify({ cookies, origins: storageState.origins }));
     console.log('Session saved.');
-  } catch (e) {
-    console.log(e);
-  }
 }
 
 module.exports = {
