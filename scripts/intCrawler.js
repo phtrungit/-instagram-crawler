@@ -78,9 +78,8 @@ async function facebookGroupCrawl(keyword, page, mw, setting, options, browser, 
     pageNumber++;
   }
 
-  mw.webContents.send('data:status', [`Done - Groups: ${allGroups.length}...`, '100%']);
-
   allGroups.length > limit && (allGroups = allGroups.slice(0, limit))
+  mw.webContents.send('data:status', [`Done - Groups: ${allGroups.length}...`, '100%']);
   const htmlFileName = `${
     (keyword || '').toLowerCase().replaceAll(' ', '')
   }_${limit}_${grMemberMin}_${grMemberMax}.html`;
