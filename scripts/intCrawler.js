@@ -218,13 +218,22 @@ async function loginInstagram(mw, page, setting, insId){
 }
 
 async function download(data) {
-  try {
+  const RETRY_TIMES = 3;
+  for (let i = 1; i <= RETRY_TIMES; i++) {
+    try {
     const response = await fetch(data.url);
     const buffer = await response.buffer();
     fs.writeFile(`${storePath}/${data.name}.jpg`, buffer, () =>
       true);
-  }catch (e) {
-    console.log(e)
+    }catch (e) {
+      if(i === RETRY_TIMES - 1){
+        throw e
+      }
+      await new Promise(
+        resolve => setTimeout(resolve, i * 200),
+      ) // 200ms, 400ms, 600ms
+      console.log(e)
+    }    
   }
 }
 
