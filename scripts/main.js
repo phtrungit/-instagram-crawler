@@ -40,6 +40,7 @@ function createWindow () {
   mainWindow.on('ready-to-show', function () {
     mainWindow.webContents.send('data:history', [{label: 'phtrungtest', value: 'phtrung'}])
   })
+  mainWindow.setMenu(mainMenu)
   mainWindow.on('close', function(){
     mainWindow = null;
     });
