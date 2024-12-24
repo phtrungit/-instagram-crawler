@@ -37,6 +37,7 @@ function createWindow () {
   mainWindow.setMenu(mainMenu)
   // and load the index.html of the app.
   mainWindow.loadFile('./public/index.html')
+  mainWindow.setMenu(mainMenu)
   mainWindow.on('ready-to-show', function () {
     mainWindow.webContents.send('data:history', [{label: 'phtrungtest', value: 'phtrung'}])
   })
